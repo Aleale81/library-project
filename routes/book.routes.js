@@ -1,11 +1,13 @@
 const Book = require("../models/Book.model");
+const Author = require("../models/Author.model");
 
 const router = require("express").Router();
 
 //READ: List all books
 router.get("/books", (req, res, next) => {
-  Book.find()
+  Book.find().populate("author")
     .then( booksFromDB => {
+      console.log(booksFromDB)
         res.render("books/books-list", {books: booksFromDB})
     })
     .catch( err => {
@@ -19,7 +21,7 @@ router.get("/books", (req, res, next) => {
 router.get("/books/:bookId", (req, res, next) => {
   const id = req.params.bookId;
 
-  Book.findById(id)
+  Book.findById(id).populate("author")
     .then( bookDetails => {
       res.render("books/book-details", bookDetails);
     } )
@@ -60,7 +62,7 @@ router.post("/books/create", (req, res, next) => {
 
 //UPDATE: display form
 router.get("/books/:bookId/edit", (req, res, next) => {
-  Book.findById(req.params.bookId)
+  Book.findById(req.params.bookId).populate("author")
     .then( (bookDetails) => {
       res.render("books/book-edit", bookDetails);
     })
@@ -92,16 +94,18 @@ router.post("/books/:bookId/edit", (req, res, next) => {
     });
 });
 
+
 //DELETE
-router.post("/BOO/:bookId/delete", (req, res, next) => {
-    Book.findByIdAndDelete(req.params.bookId)
-      .then(() => {
-        res.redirect("/books");
-      })
-      .catch(err => {
-        console.log("Error deleting book...", err);
-      });
-  
-  });
+router.post("/books/:bookId/delete", (req, res, next) => {
+  Book.findByIdAndDelete(req.params.bookId)
+    .then(() => {
+      res.redirect("/books");
+    })
+    .catch(err => {
+      console.log("Error deleting book...", err);
+      next();
+    });
+
+});
 
 module.exports = router;
