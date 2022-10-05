@@ -31,5 +31,47 @@ router.post("/signup", (req, res, next) => {
         .catch(e => {});
 });
 
+//LOGIN: display form
+router.get('/login', (req, res) => res.render('auth/login'));
+
+//LOGIN: display form
+router.get('/login', (req, res) => res.render('auth/login'));
+
+
+//LOGIN: process form
+router.post("/login", (req, res, next) => {
+    const {email, password} = req.body;
+
+    if (!email || !password) {  //back-end validation
+        res.render('auth/login', { errorMessage: 'Please enter both, email and password to login.' });
+        return;//we use return if we don't have the data we want to stop the code and don't go to the next line of code
+    }
+
+    User.findOne({email: email})
+        .then( userFromDB => {
+            if(!userFromDB){
+                // when no user with this email 
+                res.render('auth/login', { errorMessage: 'Email is not registered. Try with other email.' });
+                return;
+            } else if (bcryptjs.compareSync(password, userFromDB.passwordHash)) { //the compare method return a boolean
+                //login sucessful
+                res.render('users/user-profile', {user: userFromDB} );
+            } else {
+                //login failed
+                res.render('auth/login', { errorMessage: 'Incorrect credentials.' });
+            }
+        })
+        .catch(error => {
+            console.log("Error getting user details from DB", error)
+            next(error);
+        });
+
+        
+router.get('/user-profile', (req, res) => {
+    res.render('users/user-profile');
+    // res.render('users/user-profile', { userInSession: req.session.currentUser });
+});
+});
+
 
 module.exports = router;
