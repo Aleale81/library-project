@@ -34,13 +34,22 @@ router.get("/books/:bookId", (req, res, next) => {
 
 //CREATE: display form
 router.get("/books/create", (req, res, next) => {
-  res.render("books/book-create");
+  Author.find()
+  .then((authorsArr)=> {
+    res.render("books/book-create", {authorsArr});  //property with the same name of the data the db sent
+  })
+  .catch(err => {
+    console.log("error creating new book in DB", err);
+    next();
+  })
+  
 })
 
 
 //CREATE: process form
 router.post("/books/create", (req, res, next) => {
   
+
   const bookDetails = {
     title: req.body.title,
     description: req.body.description,
