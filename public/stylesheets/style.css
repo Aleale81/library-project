@@ -3,6 +3,11 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+header{
+  background-color: rgb(219, 219, 219);
+  padding: 1rem
+}
+
 a {
   color: #00b7ff;
 }

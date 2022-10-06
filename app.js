@@ -18,12 +18,18 @@ const app = express();
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);  // app is a function(that call express) that is exportes in the index.js file inside the config folder
 
+//config sessions
+require('./config/session.config')(app);
+
 // default value for title local
 const capitalized = require("./utils/capitalized");
 const projectName = "library-project";
 
 app.locals.appTitle = `${capitalized(projectName)} created with IronLauncher`;
-
+app.use( (req, res, next) => {
+    res.locals.userInSession = req.session.currentUser;
+    next();
+});
 // 👇 Start handling routes here
  // whtever is in this file we?ll use it
 app.use("/", require("./routes/index.routes"));

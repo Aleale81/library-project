@@ -26,7 +26,7 @@ router.post("/authors/create", (req, res, next) => {
         country: req.body.country
     }
     Author.create(authorDetails)
-    .then(() => {
+    .then((data) => {
         res.redirect("/authors");
       })
       .catch(err => {
