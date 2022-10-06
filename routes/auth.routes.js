@@ -11,7 +11,10 @@ router.get("/signup", (req, res, next) => {
 //SIGNUP: process form
 router.post("/signup", (req, res, next) => {
     const {email, password} = req.body;
-
+    if (!email || !password) {  //back-end validation
+        res.render('auth/login', { errorMessage: 'Please enter both, email and password to register.' });
+        return;//we use return if we don't have the data we want to stop the code and don't go to the next line of code
+    }
 
     bcryptjs
         .genSalt(saltRounds)

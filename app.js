@@ -30,6 +30,7 @@ app.use( (req, res, next) => {
     res.locals.userInSession = req.session.currentUser;
     next();
 });
+
 // 👇 Start handling routes here
  // whtever is in this file we?ll use it
 app.use("/", require("./routes/index.routes"));
